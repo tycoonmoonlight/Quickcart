@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickCart - WhatsApp Ordering</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset and Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f5f5f5;
+    }
+
+    /* Header */
+    header {
+      background: #f68b1e; /* Jumia's orange */
+      color: white;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .search-bar {
+      flex: 1;
+      margin: 0 1rem;
+      max-width: 500px;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 0.5rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    /* Navigation */
+    nav {
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 0.5rem 1rem;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .nav-list li {
+      position: relative;
+    }
+
+    .nav-list a {
+      color: #333;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .nav-list a:hover,
+    .nav-list a.active {
+      background: #f68b1e;
+      color: white;
+    }
+
+    /* Dropdown Menu */
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background: #fff;
+      min-width: 160px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      z-index: 1;
+      border-radius: 4px;
+      top: 100%;
+      left: 0;
+    }
+
+    .dropdown-content a {
+      display: block;
+      padding: 0.5rem 1rem;
+      color: #333;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    /* Product Grid */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr); /* Two columns on mobile */
+      gap: 0.5rem; /* Reduced gap for mobile */
+      padding: 0.5rem; /* Reduced padding for mobile */
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .product {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .product:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .product img {
+      width: 100%;
+      height: 140px; /* Reduced height for mobile */
+      object-fit: contain;
+      background: #f5f5f5;
+      padding: 0.5rem;
+    }
+
+    .product-content {
+      padding: 0.5rem;
+    }
+
+    .product h3 {
+      font-size: 0.9rem; /* Smaller font for mobile */
+      font-weight: 500;
+      margin-bottom: 0.3rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .product-price {
+      color: #f68b1e;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .product-description {
+      font-size: 0.75rem;
+      color: #666;
+      margin-bottom: 0.5rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .order-btn {
+      display: block;
+      background: #f68b1e;
+      color: white;
+      padding: 0.4rem;
+      border-radius: 4px;
+      text-align: center;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: background 0.3s ease;
+    }
+
+    .order-btn:hover {
+      background: #e07b00;
+    }
+
+    /* Footer */
+    footer {
+      background: #333;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (min-width: 768px) {
+      .product-grid {
+        grid-template-columns: repeat(2, 1fr); /* Maintain 2 columns for tablet */
+        gap: 1rem;
+        padding: 1rem;
+      }
+
+      .product img {
+        height: 180px;
+      }
+
+      .product h3 {
+        font-size: 1.1rem;
+      }
+
+      .product-price {
+        font-size: 1.2rem;
+      }
+
+      .product-description {
+        font-size: 0.85rem;
+      }
+
+      .order-btn {
+        padding: 0.5rem;
+        font-size: 1rem;
+      }
+
+      header {
+        padding: 1rem 2rem;
+      }
+
+      .logo {
+        font-size: 2rem;
+      }
+
+      .search-bar {
+        max-width: 600px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .product-grid {
+        grid-template-columns: repeat(4, 1fr); /* 4 columns for desktop */
+      }
+
+      .nav-list {
+        gap: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">QuickCart</div>
+    <div class="search-bar">
+      <input type="text" placeholder="Search products..." id="search-input">
+    </div>
+  </header>
+
+  <nav>
+    <ul class="nav-list">
+      <li><a href="#" data-category="all" class="active">All</a></li>
+      <li class="dropdown">
+        <a href="#" data-category="clothes">Clothes</a>
+        <div class="dropdown-content">
+          <a href="#" data-category="male">Male</a>
+          <a href="#" data-category="female">Female</a>
+          <a href="#" data-category="children">Children</a>
+        </div>
+      </li>
+      <li><a href="#" data-category="shoes">Shoes</a></li>
+      <li><a href="#" data-category="wristwatch">Wristwatch</a></li>
+      <li><a href="#" data-category="jewellery">Jewellery</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section class="product-grid" id="product-grid">
+      <!-- Products will be dynamically inserted by JavaScript -->
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 QuickCart. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Sample product data with categories
+    const products = [
+      {
+        name: "Men's Casual Shirt",
+        price: "$29.99",
+        description: "Comfortable cotton shirt for men, perfect for casual outings.",
+        image: "img1.jpeg",
+        category: "male",
+      },
+      {
+        name: "Women's Dress",
+        price: "$49.99",
+        description: "Elegant and stylish dress for any occasion.",
+        image: "img2.jpeg",
+        category: "female",
+      },
+      {
+        name: "Children's T-Shirt",
+        price: "$19.99",
+        description: "Fun and colorful t-shirt for kids, soft and durable.",
+        image: "img3.jpeg",
+        category: "children",
+      },
+      {
+        name: "Men's Sneakers",
+        price: "$79.99",
+        description: "Stylish and durable sneakers for everyday wear.",
+        image: "img4.jpeg",
+        category: "shoes",
+      },
+      {
+        name: "Smart Watch",
+        price: "$99.99",
+        description: "Track fitness and stay connected with this sleek smart watch.",
+        image: "img5.jpeg",
+        category: "wristwatch",
+      },
+      {
+        name: "Gold Necklace",
+        price: "$149.99",
+        description: "Elegant gold necklace for all occasions.",
+        image: "img6.jpeg",
+        category: "jewellery",
+      },
+      {
+        name: "Women's Sandals",
+        price: "$39.99",
+        description: "Comfortable and stylish sandals for summer.",
+        image: "img7.jpeg",
+        category: "shoes",
+      },
+      {
+        name: "Kids' Jacket",
+        price: "$34.99",
+        description: "Warm and cozy jacket for children.",
+        image: "img8.jpeg",
+        category: "children",
+      },
+    ];
+
+    // WhatsApp business number (replace with your own)
+    const whatsappNumber = "1234567890"; // Example number
+
+    // Function to render products based on category
+    function renderProducts(category = "all") {
+      const productGrid = document.getElementById("product-grid");
+      productGrid.innerHTML = "";
+
+      const filteredProducts = category === "all"
+        ? products
+        : category === "clothes"
+        ? products.filter(p => ["male", "female", "children"].includes(p.category))
+        : products.filter(p => p.category === category);
+
+      if (filteredProducts.length === 0) {
+        productGrid.innerHTML = '<p style="text-align: center; grid-column: span 2;">No products found.</p>';
+        return;
+      }
+
+      filteredProducts.forEach((product) => {
+        const productElement = document.createElement("div");
+        productElement.classList.add("product");
+
+        const encodedMessage = encodeURIComponent(
+          `Hi, I'd like to order ${product.name}`
+        );
+        const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+
+        productElement.innerHTML = `
+          <img src="${product.image}" alt="${product.name}">
+          <div class="product-content">
+            <h3>${product.name}</h3>
+            <p class="product-price">${product.price}</p>
+            <p class="product-description">${product.description}</p>
+            <a href="${whatsappLink}" target="_blank" class="order-btn">Order Now</a>
+          </div>
+        `;
+
+        productGrid.appendChild(productElement);
+      });
+    }
+
+    // Navigation click handler
+    function setupNavigation() {
+      const navLinks = document.querySelectorAll(".nav-list a");
+      navLinks.forEach(link => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          const category = link.getAttribute("data-category");
+          renderProducts(category);
+          // Update active state
+          navLinks.forEach(l => l.classList.remove("active"));
+          link.classList.add("active");
+        });
+      });
+    }
+
+    // Search functionality
+    function setupSearch() {
+      const searchInput = document.getElementById("search-input");
+      searchInput.addEventListener("input", (e) => {
+        const query = e.target.value.toLowerCase();
+        const filteredProducts = products.filter(p =>
+          p.name.toLowerCase().includes(query) ||
+          p.description.toLowerCase().includes(query)
+        );
+        renderProducts("all"); // Reset to all products
+        if (query) {
+          const productGrid = document.getElementById("product-grid");
+          productGrid.innerHTML = "";
+          filteredProducts.forEach(product => {
+            const productElement = document.createElement("div");
+            productElement.classList.add("product");
+            const encodedMessage = encodeURIComponent(
+              `Hi, I'd like to order ${product.name}`
+            );
+            const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+            productElement.innerHTML = `
+              <img src="${product.image}" alt="${product.name}">
+              <div class="product-content">
+                <h3>${product.name}</h3>
+                <p class="product-price">${product.price}</p>
+                <p class="product-description">${product.description}</p>
+                <a href="${whatsappLink}" target="_blank" class="order-btn">Order Now</a>
+              </div>
+            `;
+            productGrid.appendChild(productElement);
+          });
+          if (filteredProducts.length === 0) {
+            productGrid.innerHTML = '<p style="text-align: center; grid-column: span 2;">No products found.</p>';
+          }
+        }
+      });
+    }
+
+    // Initialize
+    document.addEventListener("DOMContentLoaded", () => {
+      renderProducts(); // Show all products by default
+      setupNavigation();
+      setupSearch();
+    });
+  </script>
+</body>
+</html>
